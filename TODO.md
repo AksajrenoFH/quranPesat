@@ -4,7 +4,7 @@
 
 - [x] Splash Screen
 - [x] Home Screen
-- [] Halaman Al-Quran (dri API https://quran-api.santrikoding.com/api/surah)
+- [x] Halaman Al-Quran (dri API https://quran-api.santrikoding.com/api/surah)
   - [x] nama surat
   - [x] nomor surat
   - [x] jumlah ayat
