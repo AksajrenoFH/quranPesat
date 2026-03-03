@@ -1,7 +1,9 @@
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 import {
   BookOpen,
   House,
+  LucideIcon,
   Newspaper,
   Settings,
   Sparkles,
@@ -9,7 +11,7 @@ import {
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-type TabRoute = "index" | "quran" | "artikel" | "setting" | "ai";
+type TabRoute = "index" | "quran" | "artikel" | "settings" | "ai";
 
 export default function TabLayout() {
   return (
@@ -23,23 +25,30 @@ export default function TabLayout() {
           borderTopWidth: 0,
         },
       }}
-      tabBar={(props: any) => <CustomTabBar {...props} />}
+      tabBar={(props: BottomTabBarProps) => <CustomTabBar {...props} />}
     >
       <Tabs.Screen name="index" options={{ title: "Beranda" }} />
       <Tabs.Screen name="quran" options={{ title: "Al-Quran" }} />
       <Tabs.Screen name="artikel" options={{ title: "Artikel" }} />
-      <Tabs.Screen name="setting" options={{ title: "Pengaturan" }} />
+      <Tabs.Screen name="settings" options={{ title: "Setelan" }} />
       <Tabs.Screen name="ai" options={{ title: "AI" }} />
     </Tabs>
   );
 }
 
-function CustomTabBar({ state, descriptors, navigation }: any) {
-  const icons: Record<TabRoute, React.ComponentType<any>> = {
+function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const currentRouteName = state.routes[state.index].name;
+
+  if (currentRouteName === "ai") {
+    // Sembunyikan tab bar untuk route "ai"
+    return null;
+  }
+
+  const icons: Record<TabRoute, LucideIcon> = {
     index: House,
     quran: BookOpen,
     artikel: Newspaper,
-    setting: Settings,
+    settings: Settings,
     ai: Sparkles,
   };
 
@@ -51,7 +60,6 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
       style={{
         position: "absolute",
         bottom: 25,
-        // LEBARKAN DISINI: kurangi angka left dan right agar bar lebih panjang ke samping
         left: 8,
         right: 8,
         flexDirection: "row",
@@ -59,7 +67,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
         alignItems: "center",
       }}
     >
-      {/* LEFT GROUP */}
+      {/* LEFT GROUP (Main Tabs) */}
       <View
         style={{
           flex: 1,
@@ -67,89 +75,114 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           backgroundColor: "rgba(243, 244, 238, 0.98)",
           borderRadius: 35,
           flexDirection: "row",
-          justifyContent: "space-around", // Membagi ruang icon secara merata
+          justifyContent: "space-around",
           alignItems: "center",
           paddingHorizontal: 5,
+          elevation: 5,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.1,
           shadowRadius: 10,
-          elevation: 5,
         }}
       >
-        {state.routes.slice(0, 4).map((route: any, index: number) => {
+        {state.routes.map((route, index) => {
+          // Hanya render 4 tab pertama di grup kiri
+          if (index >= 4) return null;
+
           const isFocused = state.index === index;
           const routeName = route.name as TabRoute;
           const Icon = icons[routeName];
+          const label = descriptors[route.key].options.title || route.name;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!isFocused && !event.defaultPrevented) {
+              // PAKAI NAVIGATE, JANGAN PUSH
+              navigation.navigate(route.name);
+            }
+          };
 
           return (
             <TouchableOpacity
               key={route.key}
-              onPress={() => navigation.navigate(routeName)}
-              activeOpacity={1} // Matikan efek feedback tekan agar kaku (tanpa animasi)
+              onPress={onPress}
+              activeOpacity={1}
               style={{
                 alignItems: "center",
                 justifyContent: "center",
                 flex: 1,
               }}
             >
-              <Icon size={26} color={isFocused ? activeColor : inactiveColor} />
+              <Icon size={24} color={isFocused ? activeColor : inactiveColor} />
               <Text
                 style={{
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: isFocused ? "900" : "600",
                   marginTop: 4,
                   color: isFocused ? activeColor : inactiveColor,
                 }}
               >
-                {descriptors[route.key].options.title}
+                {label}
               </Text>
             </TouchableOpacity>
           );
         })}
       </View>
 
-      {/* AI GROUP */}
+      {/* RIGHT GROUP (AI Button) */}
       <View
         style={{
-          width: 85, // Bisa dinaikkan sedikit untuk melebarkan tombol AI
+          width: 85,
           height: "100%",
           marginLeft: 8,
           backgroundColor: "rgba(243, 244, 238, 0.98)",
           borderRadius: 35,
           justifyContent: "center",
           alignItems: "center",
+          elevation: 5,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.1,
           shadowRadius: 10,
-          elevation: 5,
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ai")}
-          activeOpacity={1}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          <Sparkles
-            size={26}
-            color={state.index === 4 ? activeColor : inactiveColor}
-          />
-          <Text
-            style={{
-              fontSize: 11,
-              fontWeight: state.index === 4 ? "900" : "600",
-              marginTop: 4,
-              color: state.index === 4 ? activeColor : inactiveColor,
-            }}
-          >
-            AI
-          </Text>
-        </TouchableOpacity>
+        {(() => {
+          const aiRoute = state.routes.find((r) => r.name === "ai");
+          const aiIndex = state.routes.findIndex((r) => r.name === "ai");
+          const isAiFocused = state.index === aiIndex;
+
+          return (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ai")}
+              activeOpacity={1}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <Sparkles
+                size={26}
+                color={isAiFocused ? activeColor : inactiveColor}
+              />
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: isAiFocused ? "900" : "600",
+                  marginTop: 4,
+                  color: isAiFocused ? activeColor : inactiveColor,
+                }}
+              >
+                AI
+              </Text>
+            </TouchableOpacity>
+          );
+        })()}
       </View>
     </View>
   );

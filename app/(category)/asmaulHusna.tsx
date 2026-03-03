@@ -1,38 +1,35 @@
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { Bookmark, BookOpen, Search, Settings } from "lucide-react-native";
+import { ChevronLeft, RefreshCcw, Search } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type Surah = {
-  nomor: number;
-  nama: string;
-  nama_latin: string;
-  jumlah_ayat: number;
-  tempat_turun: string;
+type ItemAsmaulHusna = {
+  urutan: number;
+  arab: string;
+  latin: string;
   arti: string;
 };
 
-export default function Quran() {
+export default function asmaulHusna() {
   const router = useRouter();
 
-  const [data, setData] = useState<Surah[]>([]);
+  const [data, setData] = useState<ItemAsmaulHusna[]>([]);
   const [isLoad, setIsLoad] = useState(true);
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("https://quran-api.santrikoding.com/api/surah")
+    fetch("https://asmaul-husna-api.vercel.app/api/all")
       .then((response) => response.json())
       .then((result) => {
-        setData(result);
+        if (result && result.data) {
+          setData(result.data);
+        }
         setIsLoad(false);
       })
       .catch((e) => console.log(e));
@@ -45,6 +42,7 @@ export default function Quran() {
         showsVerticalScrollIndicator={false}
       >
         {/* HEADER */}
+
         <View
           style={{
             flexDirection: "row",
@@ -55,18 +53,24 @@ export default function Quran() {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-            <BookOpen size={32} color={"#344863a6"} />
+            <ChevronLeft
+              onPress={() => router.replace("/(tabs)")}
+              size={32}
+              color={"#344863a6"}
+            />
+
             <Text style={{ fontSize: 26, color: "#344863", fontWeight: "800" }}>
-              Al-Quran
+              Asmaul Husna
             </Text>
           </View>
+
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-            <Bookmark size={28} color={"#344863a6"} />
-            <Settings size={28} color={"#344863a6"} />
+            <RefreshCcw size={20} color={"#344863a6"} />
           </View>
         </View>
 
         {/* searhc */}
+
         <View
           style={{
             marginTop: 20,
@@ -78,9 +82,7 @@ export default function Quran() {
         >
           <View style={{ justifyContent: "center" }}>
             <TextInput
-              placeholder="Cari surat..."
-              value={search}
-              onChangeText={(text) => setSearch(text)}
+              placeholder="Cari arab, latin, arti..."
               style={{
                 backgroundColor: "#fff",
                 borderRadius: 15,
@@ -96,6 +98,7 @@ export default function Quran() {
               }}
               placeholderTextColor="#7F7E7D"
             />
+
             <Search
               size={22}
               color="#7F7E7D"
@@ -104,101 +107,91 @@ export default function Quran() {
           </View>
         </View>
 
-        {/* SUrah */}
-        <View style={{ paddingBottom: 80 }}>
+        {/* Asmauol Husna */}
+
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingBottom: 20,
+            flexDirection: "row-reverse", // Sesuai gambar: urutan 1 dari kanan
+            flexWrap: "wrap",
+            gap: 10,
+            justifyContent: "center", // Agar grid terlihat seimbang
+          }}
+        >
           {isLoad ? (
             <ActivityIndicator
               size={30}
               color={"#344863"}
-              style={{ flex: 1 }}
+              style={{ flex: 1, marginTop: 50 }}
             />
           ) : (
-            data.map((surah) => (
-              <TouchableOpacity
-                key={surah.nomor}
-                onPress={() =>
-                  router.push({
-                    pathname: "/detailSurat",
-                    params: { nomor: JSON.stringify(surah) },
-                  })
-                }
-                activeOpacity={0.7}
+            data &&
+            data.map((item, index) => (
+              <View
+                key={index}
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: 15,
-                  paddingHorizontal: 20,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "rgba(150, 150, 150, 0.1)",
+                  backgroundColor: "#fff",
+                  borderWidth: 1,
+                  borderColor: "#E5E7EB",
+                  borderRadius: 12, // Sudut sedikit lebih tumpul
+                  padding: 10,
+                  width: "31%", // Ukuran pas untuk 3 kolom
+                  aspectRatio: 1, // Memaksa kartu menjadi kotak sempurna
+                  justifyContent: "space-between", // Mendorong konten ke atas dan bawah
                 }}
               >
+                {/* BAGIAN ATAS: Nomor & Arab */}
                 <View
                   style={{
-                    width: 55,
-                    height: 55,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
                   }}
                 >
-                  <Image
-                    source={require("./../../assets/logo/ayat.png")}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "absolute",
-                    }}
-                    contentFit="contain"
-                  />
                   <Text
                     style={{
-                      fontSize: 14,
-                      color: "#344863",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {surah.nomor}
-                  </Text>
-                </View>
-
-                <View style={{ flex: 1, marginLeft: 15 }}>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: "#344863",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {surah.nama_latin}
-                  </Text>
-                  <Text
-                    style={{ fontSize: 13, color: "#778597", marginTop: 2 }}
-                  >
-                    {surah.arti} • {surah.jumlah_ayat} Ayat
-                  </Text>
-                </View>
-
-                <View style={{ alignItems: "flex-end" }}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: "#556761",
+                      fontSize: 10,
                       fontWeight: "bold",
+                      color: "#7F7E7D",
                     }}
                   >
-                    {surah.nama}
+                    {item.urutan}
                   </Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "#344863",
+                      textAlign: "right",
+                      flexShrink: 1,
+                    }}
+                    numberOfLines={1}
+                  >
+                    {item.arab}
+                  </Text>
+                </View>
+
+                {/* BAGIAN BAWAH: Latin & Arti */}
+                <View>
                   <Text
                     style={{
                       fontSize: 11,
-                      color: "#9CA3AF",
-                      marginTop: 4,
-                      textTransform: "capitalize",
+                      fontWeight: "bold",
+                      color: "#344863",
                     }}
+                    numberOfLines={1}
                   >
-                    {surah.tempat_turun}
+                    {item.latin}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 9, color: "#7F7E7D", marginTop: 2 }}
+                    numberOfLines={2} // Menghindari teks meluber jika arti terlalu panjang
+                  >
+                    {item.arti}
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </View>
             ))
           )}
         </View>

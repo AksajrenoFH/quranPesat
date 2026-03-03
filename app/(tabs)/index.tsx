@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import {
   Bell,
   BookOpen,
@@ -11,6 +12,7 @@ import {
   Moon,
   Scroll,
   Search,
+  Share2,
   Sun,
   Sunrise,
   Sunset,
@@ -18,6 +20,7 @@ import {
 import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -33,10 +36,15 @@ type Adzan = {
 };
 
 export default function index() {
+  const router = useRouter();
+
   const [time, setTime] = useState<string>("");
   // Countown
   const [nextPrayer, setNextPrayer] = useState<string>("");
   const [countdown, setCountdown] = useState<string>("");
+
+  const [like1, setLike1] = useState({ count: 128, active: false });
+  const [like2, setLike2] = useState({ count: 89, active: false });
 
   function nextPrayerTime() {
     const now = new Date();
@@ -88,6 +96,20 @@ export default function index() {
     Ashar: "15:12",
     Maghrib: "18:15",
     Isya: "19:24",
+  };
+
+  const toggleLike = (id: number) => {
+    if (id === 1) {
+      setLike1((prev) => ({
+        active: !prev.active,
+        count: prev.active ? prev.count - 1 : prev.count + 1,
+      }));
+    } else {
+      setLike2((prev) => ({
+        active: !prev.active,
+        count: prev.active ? prev.count - 1 : prev.count + 1,
+      }));
+    }
   };
 
   return (
@@ -225,7 +247,10 @@ export default function index() {
           paddingVertical: 20,
         }}
       >
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(tabs)/quran")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -242,9 +267,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Al-Quran
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/doa")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -261,9 +289,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Doa Harian
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/dzikir")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -280,9 +311,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Dzikir Dhuha
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/hadist")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -299,9 +333,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Hadist
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/kiblat")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -318,9 +355,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Arah Kiblat
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/donasi")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -337,9 +377,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Donasi
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/asmaulHusna")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -356,9 +399,12 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Asmaul Husna
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={{ width: "25%", alignItems: "center", marginBottom: 20 }}>
+        <Pressable
+          onPress={() => router.push("/(category)/other")}
+          style={{ width: "25%", alignItems: "center", marginBottom: 20 }}
+        >
           <View
             style={{
               width: 60,
@@ -375,7 +421,7 @@ export default function index() {
           <Text style={{ fontSize: 12, textAlign: "center", color: "#444" }}>
             Lainnya
           </Text>
-        </View>
+        </Pressable>
       </View>
 
       {/* Banner */}
@@ -403,6 +449,187 @@ export default function index() {
           </Text>
         </View>
       </View>
+      {/* Doa */}
+      <View style={{ paddingHorizontal: 15, marginBottom: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 15,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: "700", color: "#333" }}>
+            Aminkan doa saudaramu
+          </Text>
+          <Pressable>
+            <Text style={{ color: "#778B8A", fontWeight: "600" }}>
+              Buat doa +
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Aaaamin */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 12 }}
+        >
+          <View
+            style={{
+              width: 280,
+              backgroundColor: "#EAEAEA",
+              borderRadius: 12,
+              padding: 15,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 12,
+              }}
+            >
+              <View
+                style={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: 20,
+                  backgroundColor: "#DDD",
+                }}
+              />
+              <View>
+                <Text style={{ fontWeight: "700", fontSize: 14 }}>
+                  Ahmad Fauzi
+                </Text>
+                <Text style={{ fontSize: 11, color: "#888" }}>
+                  2 jam yang lalu
+                </Text>
+              </View>
+            </View>
+            <Text style={{ fontWeight: "700", marginBottom: 5 }}>
+              Doa untuk Kesembuhan Ibu
+            </Text>
+            <Text
+              style={{ fontSize: 13, color: "#555", lineHeight: 18 }}
+              numberOfLines={3}
+            >
+              Mohon doanya untuk kesembuhan ibu saya yang sedang sakit. Semoga
+              Allah memberikan kesembuhan yang sem...
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 15,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <Pressable onPress={() => toggleLike(1)}>
+                  <Heart
+                    size={18}
+                    color={like1.active ? "none" : "#666"}
+                    fill={like1.active ? "#ff0000" : "none"}
+                  />
+                </Pressable>
+                <Text style={{ color: "#778B8A", fontSize: 13 }}>
+                  Aamiin {like1.count}
+                </Text>
+              </View>
+              <Share2 size={18} color="#778B8A" />
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: 280,
+              backgroundColor: "#EAEAEA",
+              borderRadius: 12,
+              padding: 15,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 12,
+              }}
+            >
+              <View
+                style={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: 20,
+                  backgroundColor: "#DDD",
+                }}
+              />
+              <View>
+                <Text style={{ fontWeight: "700", fontSize: 14 }}>
+                  Fatimah Zahra
+                </Text>
+                <Text style={{ fontSize: 11, color: "#888" }}>
+                  5 jam yang lalu
+                </Text>
+              </View>
+            </View>
+            <Text style={{ fontWeight: "700", marginBottom: 5 }}>
+              Doa Kelancaran Ujian
+            </Text>
+            <Text
+              style={{ fontSize: 13, color: "#555", lineHeight: 18 }}
+              numberOfLines={3}
+            >
+              Mohon doanya untuk kelancaran saya yang akan ujian nasional.
+              Semoga diberi kemudahan dan kelu...
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 15,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <Pressable onPress={() => toggleLike(2)}>
+                  <Heart
+                    size={18}
+                    color={like2.active ? "none" : "#666"}
+                    fill={like2.active ? "#ff0000" : "none"}
+                  />
+                </Pressable>
+                <Text style={{ color: "#778B8A", fontSize: 13 }}>
+                  Aamiin {like2.count}
+                </Text>
+              </View>
+              <Share2 size={18} color="#778B8A" />
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* puter */}
+      <Text
+        style={{
+          textAlign: "center",
+          fontSize: 11,
+          color: "#778B8A",
+          paddingHorizontal: 40,
+          marginTop: 20,
+          lineHeight: 16,
+          marginBottom: 50,
+        }}
+      >
+        Semua operasional aplikasi ini di develop dengan individu bukan kelompok
+        atau organisasi masyarakat
+      </Text>
     </ScrollView>
   );
 }
