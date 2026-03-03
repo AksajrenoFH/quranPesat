@@ -62,7 +62,11 @@ export default function Quran() {
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
             <Bookmark size={28} color={"#344863a6"} />
-            <Settings size={28} color={"#344863a6"} />
+            <Settings
+              onPress={() => router.push("/settingQuran")}
+              size={28}
+              color={"#344863a6"}
+            />
           </View>
         </View>
 

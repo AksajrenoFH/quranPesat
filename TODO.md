@@ -4,10 +4,12 @@
 
 - [O] Splash Screen
 - [O] Home Screen
+  - [O] Halaman Notifikasi
 - [O] Halaman Al-Quran (dri API https://quran-api.santrikoding.com/api/surah)
   - [O] nama surat
   - [O] nomor surat
   - [O] jumlah ayat
+  - [O] halaman pengaturan
 - [O] Halaman Detail Surat (dri API https://quran-api.santrikoding.com/api/surah/{nomor})
   - [O] param nomor halaman before
   - [O] fetch data berdasarkan nomor
@@ -18,19 +20,17 @@
   - [O] together API
   - [x] HuggingFace Token
 - [] Button List
-  - [] Kiblat
+  - [O] Kiblat
   - [O] Donasi
   - [O] Lainnya/Other
   ### Doa
-  - [] https://open-api.my.id/api/doa ( Daftar doa )
-  - [] https://open-api.my.id/api/doa/{id} ( Detail doa )
+  - [O] https://open-api.my.id/api/doa ( Daftar doa )
   ### Dzikir
-  - [] https://muslim-api-three.vercel.app/v1/hadits ( Daftar hadist )
   - [] https://muslim-api-three.vercel.app/v1/dzikir ( Daftar dzikir )
   ### Asmaul Husna
   - [O] https://asmaul-husna-api.vercel.app/api/all ( Daftar asmaul husna )
   ### Hadist
-  - [] https://muslim-api-three.vercel.app/v1/hadits (Daftar Hadist)
+  - [0] https://muslim-api-three.vercel.app/v1/hadits (Daftar Hadist)
 
 ## KESALAHAN YANG DIHINDARI
 

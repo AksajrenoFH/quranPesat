@@ -16,7 +16,9 @@ export default function RootLayout() {
       <Stack.Screen name="(category)/hadist" options={{ headerShown: false }} />
       <Stack.Screen name="(category)/kiblat" options={{ headerShown: false }} />
       <Stack.Screen name="(category)/other" options={{ headerShown: false }} />
+      <Stack.Screen name="notification" options={{ headerShown: false }} />
       <Stack.Screen name="detailSurat" options={{ headerShown: false }} />
+      <Stack.Screen name="settingQuran" options={{ headerShown: false }} />
       <Stack.Screen
         name="modal"
         options={{ presentation: "modal", title: "Modal" }}

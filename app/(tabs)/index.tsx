@@ -154,6 +154,7 @@ export default function index() {
             </View>
             {/* Notification */}
             <Bell
+              onPress={() => router.push("/notification")}
               size={22}
               color="#FFF"
               fill={"#E5EBEB"}
